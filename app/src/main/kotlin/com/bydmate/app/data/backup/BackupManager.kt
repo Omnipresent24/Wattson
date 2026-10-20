@@ -87,6 +87,9 @@ class BackupManager(
             BlindSpotPreferences.PREFS_NAME,
             SplitPreferencesImpl.PREFS_NAME,
             HudController.PREFS_NAME,
+            // WATTSON fork: door-unlock limit and the camera channel mapping of this car.
+            com.bydmate.app.data.automation.SafetyLimits.PREFS,
+            com.bydmate.app.camera.CameraLabActivity.PREFS,
         )
 
         /** SharedPreferences files carried by a backup. */
@@ -508,7 +511,11 @@ class BackupManager(
 
     /** Export zips in the public Download folder, newest first. */
     fun listBackups(): List<File> =
-        listBackupFiles(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS))
+        (listBackupFiles(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)) +
+            // WATTSON fork: copies on the SD card / USB stick survive a wiped head unit.
+            (BackupMirror.dir(context)?.let(::listBackupFiles) ?: emptyList()))
+            .distinctBy { it.name }
+            .sortedByDescending { it.lastModified() }
 
     /** Parts [file] carries, read from its manifest alone; the restore dialog offers only these. */
     fun archiveParts(file: File): Set<BackupPart> {

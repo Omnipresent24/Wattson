@@ -10,7 +10,7 @@ import android.content.Context
  * [ActionDispatcher] can read it without a Context. [load] runs once at app start.
  */
 object SafetyLimits {
-    private const val PREFS = "wattson_safety"
+    const val PREFS = "wattson_safety"
     private const val KEY_UNLOCK_MAX_KMH = "unlock_max_kmh"
 
     /** Speeds the user can pick for the door-unlock limit. */

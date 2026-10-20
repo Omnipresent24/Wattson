@@ -498,14 +498,15 @@ open class SettingsRepository @Inject constructor(
 
     // --- Automatic backup (#237) ---
 
+    // WATTSON fork: daily backups are on until the user picks something else.
     suspend fun getAutoBackupPeriod(): AutoBackupPeriod =
-        AutoBackupPeriod.fromKey(settingsDao.get(KEY_AUTO_BACKUP_PERIOD))
+        settingsDao.get(KEY_AUTO_BACKUP_PERIOD)?.let(AutoBackupPeriod::fromKey) ?: AutoBackupPeriod.WATTSON_DEFAULT
 
     suspend fun setAutoBackupPeriod(period: AutoBackupPeriod) =
         setString(KEY_AUTO_BACKUP_PERIOD, period.key)
 
     fun observeAutoBackupPeriod(): Flow<AutoBackupPeriod> =
-        observeString(KEY_AUTO_BACKUP_PERIOD).map { AutoBackupPeriod.fromKey(it) }
+        settingsDao.observe(KEY_AUTO_BACKUP_PERIOD).map { it?.let(AutoBackupPeriod::fromKey) ?: AutoBackupPeriod.WATTSON_DEFAULT }
 
     suspend fun getAutoBackupLastTs(): Long =
         getString(KEY_AUTO_BACKUP_LAST_TS, "0").toLongOrNull() ?: 0L

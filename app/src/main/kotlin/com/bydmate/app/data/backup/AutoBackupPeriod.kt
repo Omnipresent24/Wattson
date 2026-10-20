@@ -10,6 +10,9 @@ enum class AutoBackupPeriod(val key: String, val intervalMs: Long) {
     companion object {
         /** Unknown or absent value maps to OFF. */
         fun fromKey(key: String?): AutoBackupPeriod = entries.firstOrNull { it.key == key } ?: OFF
+
+        /** WATTSON fork: period used before the user has chosen one. */
+        val WATTSON_DEFAULT = DAILY
     }
 }
 

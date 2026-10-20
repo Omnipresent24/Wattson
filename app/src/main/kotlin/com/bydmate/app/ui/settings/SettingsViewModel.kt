@@ -2693,7 +2693,10 @@ class SettingsViewModel @Inject @Suppress("LongParameterList") constructor( // H
             _uiState.update { it.copy(configStatus = appStrings.get(R.string.settings_export_in_progress)) }
             try {
                 settingsRepository.setManualBackupParts(parts)
-                val result = AutoBackupRunner(backupManager, telegramBackupSink, settingsRepository).saveManual(parts)
+                val result = AutoBackupRunner(
+                    backupManager, telegramBackupSink, settingsRepository,
+                    mirror = { com.bydmate.app.data.backup.BackupMirror.copy(appContext, it) },
+                ).saveManual(parts)
                 val telegram = when {
                     result.sent -> appStrings.get(R.string.settings_config_save_sent)
                     result.sendError != null -> appStrings.get(

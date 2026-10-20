@@ -23,7 +23,7 @@ class AutoBackupWorker @AssistedInject constructor(
 
     override suspend fun doWork(): Result {
         val outcome = withContext(Dispatchers.IO) {
-            AutoBackupRunner(backupManager, sink, settingsRepository).run()
+            AutoBackupRunner(backupManager, sink, settingsRepository, mirror = { BackupMirror.copy(applicationContext, it) }).run()
         }
         return when (capRetries(outcome, runAttemptCount)) {
             RunOutcome.SUCCESS -> Result.success()
