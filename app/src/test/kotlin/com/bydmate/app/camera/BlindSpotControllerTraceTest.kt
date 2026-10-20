@@ -98,7 +98,9 @@ class BlindSpotControllerTraceTest {
     // --- arming gate ---
 
     @Test fun `each arming transition is traced once with its reason`() {
-        prefs.edit().putBoolean(BlindSpotPreferences.KEY_ENABLED, true).commit()
+        prefs.edit().putBoolean(BlindSpotPreferences.KEY_ENABLED, true)
+            // WATTSON fork changed the defaults (0 km/h, both on cluster); these tests pin the upstream ones.
+            .putInt(BlindSpotPreferences.KEY_THRESHOLD_KMH, 20).putBoolean(BlindSpotPreferences.KEY_BOTH_ON_CLUSTER, false).commit()
 
         poll(speed = 3, gear = 4)   // below the warm band: stays disarmed, nothing to say
         poll(speed = 30, gear = 4)
@@ -115,7 +117,9 @@ class BlindSpotControllerTraceTest {
     }
 
     @Test fun `a speed below the band is named in the disarm reason`() {
-        prefs.edit().putBoolean(BlindSpotPreferences.KEY_ENABLED, true).commit()
+        prefs.edit().putBoolean(BlindSpotPreferences.KEY_ENABLED, true)
+            // WATTSON fork changed the defaults (0 km/h, both on cluster); these tests pin the upstream ones.
+            .putInt(BlindSpotPreferences.KEY_THRESHOLD_KMH, 20).putBoolean(BlindSpotPreferences.KEY_BOTH_ON_CLUSTER, false).commit()
         poll(speed = 30, gear = 4)
         poll(speed = 3, gear = 4)
 
@@ -125,7 +129,9 @@ class BlindSpotControllerTraceTest {
     // --- watchdog ---
 
     @Test fun `windows whose surface never arrives are given up with the reason, and the factory view is traced`() {
-        prefs.edit().putBoolean(BlindSpotPreferences.KEY_ENABLED, true).commit()
+        prefs.edit().putBoolean(BlindSpotPreferences.KEY_ENABLED, true)
+            // WATTSON fork changed the defaults (0 km/h, both on cluster); these tests pin the upstream ones.
+            .putInt(BlindSpotPreferences.KEY_THRESHOLD_KMH, 20).putBoolean(BlindSpotPreferences.KEY_BOTH_ON_CLUSTER, false).commit()
         coEvery { helper.readBatch(any()) } answers {
             // Left blinker held: the camera, and with it the windows, only come up on a signal.
             listOf(0 to 2, 0 to java.lang.Float.floatToRawIntBits(40f), 0 to 4, 0 to 0, 0 to 0)

@@ -58,7 +58,9 @@ class BlindSpotControllerNative360Test {
     private val fed = mutableSetOf<TextureView>()
 
     @Before fun setUp() {
-        prefs.edit().clear().putBoolean(BlindSpotPreferences.KEY_ENABLED, true).commit()
+        prefs.edit().clear().putBoolean(BlindSpotPreferences.KEY_ENABLED, true)
+            // WATTSON fork changed the defaults (0 km/h, both on cluster); these tests pin the upstream ones.
+            .putInt(BlindSpotPreferences.KEY_THRESHOLD_KMH, 20).putBoolean(BlindSpotPreferences.KEY_BOTH_ON_CLUSTER, false).commit()
         android.hardware.AVMCamera.reset()
         coEvery { helper.readBatch(any()) } answers {
             // Left blinker held, 40 km/h, D: the camera is wanted unless the 360 is up.

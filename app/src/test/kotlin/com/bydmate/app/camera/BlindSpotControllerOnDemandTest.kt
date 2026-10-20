@@ -61,7 +61,9 @@ class BlindSpotControllerOnDemandTest {
     @Volatile private var gear = GEAR_D
 
     @Before fun setUp() {
-        prefs.edit().clear().putBoolean(BlindSpotPreferences.KEY_ENABLED, true).commit()
+        prefs.edit().clear().putBoolean(BlindSpotPreferences.KEY_ENABLED, true)
+            // WATTSON fork changed the defaults (0 km/h, both on cluster); these tests pin the upstream ones.
+            .putInt(BlindSpotPreferences.KEY_THRESHOLD_KMH, 20).putBoolean(BlindSpotPreferences.KEY_BOTH_ON_CLUSTER, false).commit()
         android.hardware.AVMCamera.reset()
         coEvery { helper.readBatch(any()) } answers {
             listOf(0 to blink, 0 to java.lang.Float.floatToRawIntBits(40f), 0 to gear, 0 to 0, 0 to 0)
