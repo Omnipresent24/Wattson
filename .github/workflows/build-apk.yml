@@ -53,8 +53,21 @@ jobs:
             echo "variant=debug" >> "$GITHUB_OUTPUT"
           fi
 
+      # Tests and lint report problems but do not block the APK (upstream gates neither on
+      # pushes either); failures are turned into annotations by the report step below.
       - name: Unit tests
-        run: ./gradlew :app:testDebugUnitTest --stacktrace
+        id: tests
+        continue-on-error: true
+        run: ./gradlew :app:testDebugUnitTest --continue --stacktrace
+
+      - name: Android Lint
+        id: lint
+        continue-on-error: true
+        run: ./gradlew :app:lintDebug --stacktrace
+
+      - name: Report test and lint failures
+        if: always()
+        run: python3 .github/scripts/report_failures.py
 
       - name: Build APK
         run: |
