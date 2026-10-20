@@ -2210,6 +2210,8 @@ private fun ServiceSection(
 
     UnlockSpeedLimitCard()
     Spacer(modifier = Modifier.height(8.dp))
+    MotorklangCard()
+    Spacer(modifier = Modifier.height(8.dp))
 
     // Volume-knob press → play/pause. The interception lives in the a11y key filter, so turning
     // the switch on self-enables it via the daemon, exactly like the projection card.
@@ -4627,6 +4629,86 @@ private fun cloudOverWifiStatusText(state: CloudOverWifiState): String? = when (
  * WATTSON fork: the door-unlock speed limit, picked from [SafetyLimits.UNLOCK_OPTIONS_KMH].
  * Stored straight in [SafetyLimits]; the gate in ActionDispatcher reads it on every command.
  */
+/** WATTSON fork: Motorklang, the virtual engine sound. */
+@OptIn(androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
+@Composable
+private fun MotorklangCard() {
+    val context = LocalContext.current
+    val mk = com.bydmate.app.motorklang.MotorklangController
+    var s by remember { mutableStateOf(mk.settings(context)) }
+    fun update(n: com.bydmate.app.motorklang.MotorklangController.Settings) { s = n; mk.save(context, n) }
+    Card(
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(containerColor = CardSurfaceElevated),
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        Column(modifier = Modifier.padding(12.dp)) {
+            Text(stringResource(R.string.wattson_mk_title), color = TextPrimary, fontSize = 15.sp, fontWeight = FontWeight.Medium)
+            Text(
+                stringResource(R.string.wattson_mk_desc),
+                color = TextSecondary, fontSize = 12.sp, lineHeight = 16.sp,
+                modifier = Modifier.padding(top = 2.dp, bottom = 4.dp),
+            )
+            SettingToggleRow(
+                title = stringResource(R.string.wattson_mk_enabled),
+                traceId = "motorklang",
+                checked = s.enabled,
+                onCheckedChange = { update(s.copy(enabled = it)) },
+            )
+            SettingToggleRow(
+                title = stringResource(R.string.wattson_mk_only_ev),
+                description = stringResource(R.string.wattson_mk_only_ev_desc),
+                traceId = "motorklang_only_ev",
+                checked = s.onlyEv,
+                onCheckedChange = { update(s.copy(onlyEv = it)) },
+            )
+            SettingSliderRow(
+                title = stringResource(R.string.wattson_mk_volume),
+                value = s.volume,
+                onValueChange = { s = s.copy(volume = it) },
+                onValueChangeFinished = { update(s) },
+                valueRange = 0f..1f,
+                valueLabel = "${(s.volume * 100).toInt()} %",
+            )
+            SettingSliderRow(
+                title = stringResource(R.string.wattson_mk_vmax),
+                description = stringResource(R.string.wattson_mk_vmax_desc),
+                value = s.ownVmaxKmh.toFloat(),
+                onValueChange = { s = s.copy(ownVmaxKmh = (it / 5).toInt() * 5) },
+                onValueChangeFinished = { update(s) },
+                valueRange = 120f..270f,
+                valueLabel = "${s.ownVmaxKmh} km/h",
+            )
+            Text(
+                stringResource(R.string.wattson_mk_profile),
+                color = TextPrimary, fontSize = 14.sp,
+                modifier = Modifier.padding(top = 8.dp, bottom = 6.dp),
+            )
+            FlowRow(
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                verticalArrangement = Arrangement.spacedBy(6.dp),
+            ) {
+                com.bydmate.app.motorklang.EngineProfiles.ALL.forEach { p ->
+                    UnitChip(
+                        label = p.name,
+                        selected = p.id == s.profileId,
+                        onClick = { update(s.copy(profileId = p.id)) },
+                    )
+                }
+            }
+            Text(
+                com.bydmate.app.motorklang.EngineProfiles.byId(s.profileId).spec,
+                color = TextSecondary, fontSize = 12.sp,
+                modifier = Modifier.padding(top = 6.dp),
+            )
+            OutlinedButton(
+                onClick = { mk.preview(context) },
+                modifier = Modifier.padding(top = 8.dp),
+            ) { Text(stringResource(R.string.wattson_mk_preview)) }
+        }
+    }
+}
+
 @OptIn(androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
 @Composable
 private fun UnlockSpeedLimitCard() {

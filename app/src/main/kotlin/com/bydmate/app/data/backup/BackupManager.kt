@@ -90,6 +90,7 @@ class BackupManager(
             // WATTSON fork: door-unlock limit and the camera channel mapping of this car.
             com.bydmate.app.data.automation.SafetyLimits.PREFS,
             com.bydmate.app.camera.CameraLabActivity.PREFS,
+            com.bydmate.app.motorklang.MotorklangController.PREFS,
         )
 
         /** SharedPreferences files carried by a backup. */

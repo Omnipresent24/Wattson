@@ -10,4 +10,14 @@
     <string name="wattson_lab_close" translatable="false">Schließen</string>
     <string name="wattson_lab_entry_title" translatable="false">Kamera-Labor (Wattson)</string>
     <string name="wattson_lab_entry_desc" translatable="false">Kamerakanäle durchschalten, Front und Heck festlegen und eine Testaufnahme auf die Speicherkarte machen. Nur im Stand und ohne Blinker benutzen.</string>
+    <string name="wattson_mk_title" translatable="false">Motorklang</string>
+    <string name="wattson_mk_desc" translatable="false">Virtueller Motorsound über die Lautsprecher im Innenraum, berechnet aus Geschwindigkeit und Leistung des Autos. Der Außen-Fußgängerton bleibt unverändert.</string>
+    <string name="wattson_mk_enabled" translatable="false">Motorklang beim Fahren</string>
+    <string name="wattson_mk_only_ev" translatable="false">Nur im Elektrobetrieb</string>
+    <string name="wattson_mk_only_ev_desc" translatable="false">Im Hybridbetrieb (Benziner kann laufen) ausblenden.</string>
+    <string name="wattson_mk_volume" translatable="false">Lautstärke</string>
+    <string name="wattson_mk_vmax" translatable="false">Höchstgeschwindigkeit deines Autos</string>
+    <string name="wattson_mk_vmax_desc" translatable="false">So schaltet der Klang-Motor über den gleichen Tempobereich wie dein Auto.</string>
+    <string name="wattson_mk_profile" translatable="false">Motor</string>
+    <string name="wattson_mk_preview" translatable="false">Hörprobe</string>
 </resources>

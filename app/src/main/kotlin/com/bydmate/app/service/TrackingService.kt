@@ -1430,6 +1430,7 @@ class TrackingService : Service(), LocationListener {
 
         alicePollingManager.stop()
         blindSpotController.stop()
+        com.bydmate.app.motorklang.MotorklangController.stopAll()
         clusterMusicBridge.stop()
         cameraStateMonitor.stop()
         _cameraActive.value = false
@@ -1552,6 +1553,8 @@ class TrackingService : Service(), LocationListener {
                     lastDataAtMs = System.currentTimeMillis()
                     lastSample = sample
                     blindSpotController.onPollSnapshot(data)
+                    // WATTSON fork: virtual engine sound, off unless switched on in Settings.
+                    com.bydmate.app.motorklang.MotorklangController.onPollSnapshot(this@TrackingService, data)
                     beltProbeLog.onSnapshot(data)
                     alicePollingManager.latestData = data
                     // Cache for AutoserviceChargingDetector — avoids extra parsReader.fetch() inside runCatchUp.

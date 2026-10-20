@@ -3,6 +3,15 @@
 Wattson ist eine angepasste Version von [BYDMate](https://github.com/AndyShaman/BYDMate) von AndyShaman
 für den BYD Seal U DM-i. Lizenz: PolyForm Noncommercial 1.0.0 (nur nicht-kommerzielle Nutzung).
 
+## 4.0.1.4
+
+- Neu: **Motorklang** (Einstellungen → Fahrzeugsystem): virtueller Motorsound über die Lautsprecher
+  im Innenraum, aus dem Motorklang-Prototyp übernommen. 18 Motoren vom Reihen-5 bis zum V10,
+  mit Schaltgetriebe-Simulation, Turbo, Kompressor und Fehlzündungen
+- Statt GPS nutzt Wattson Geschwindigkeit und Leistung direkt vom Auto; Rekuperation = Gas weg
+- Standardmäßig aus; „Nur im Elektrobetrieb“ blendet den Klang im Hybridbetrieb aus
+- Hörprobe-Knopf zum Ausprobieren im Stand
+
 ## 4.0.1.3
 
 - Automatische Sicherung ist jetzt standardmäßig eingeschaltet (täglich, beim ersten Start nach 24 Stunden)
