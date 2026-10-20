@@ -14,7 +14,7 @@ import org.junit.Test
  */
 class ActionDispatcherUnlockGateTest {
 
-    private fun gate(cmd: String, speed: Int?) = ActionDispatcher.unlockGateBlockReason(cmd, speed)
+    private fun gate(cmd: String, speed: Int?) = ActionDispatcher.unlockGateBlockReason(cmd, speed, maxKmh = 30)
 
     @Test fun `unlock predicate matches canonical command`() {
         assertTrue(ActionDispatcher.isDoorUnlockCommand("车门解锁"))
@@ -33,8 +33,14 @@ class ActionDispatcherUnlockGateTest {
     }
 
     @Test fun `unlock blocked above 30 kmh`() {
-        assertEquals(BlockReason.UnlockSpeed(31), gate("车门解锁", 31))
-        assertEquals(BlockReason.UnlockSpeed(90), gate("车门解锁", 90))
+        assertEquals(BlockReason.UnlockSpeed(31, 30), gate("车门解锁", 31))
+        assertEquals(BlockReason.UnlockSpeed(90, 30), gate("车门解锁", 90))
+    }
+
+    @Test fun `unlock limit follows the chosen setting`() {
+        assertNull(ActionDispatcher.unlockGateBlockReason("车门解锁", 15, maxKmh = 15))
+        assertEquals(BlockReason.UnlockSpeed(16, 15), ActionDispatcher.unlockGateBlockReason("车门解锁", 16, maxKmh = 15))
+        assertEquals(BlockReason.UnlockSpeed(11, 10), ActionDispatcher.unlockGateBlockReason("车门解锁", 11, maxKmh = 10))
     }
 
     @Test fun `unlock blocked when speed unknown`() {

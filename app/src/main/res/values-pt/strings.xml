@@ -1183,7 +1183,7 @@
     <string name="gate_sunroof_speed">Abertura do teto solar bloqueada a %1$d km/h (&gt;80)</string>
     <string name="gate_windows_speed">Abertura dos vidros bloqueada a %1$d km/h (&gt;120)</string>
     <string name="gate_unlock_speed_unknown">Velocidade desconhecida, não destranco as portas</string>
-    <string name="gate_unlock_speed">Destrancamento das portas bloqueado a %1$d km/h (&gt;30)</string>
+    <string name="gate_unlock_speed">Destrancamento das portas bloqueado a %1$d km/h (&gt;%2$d)</string>
     <string name="gate_forbidden_command">Comando proibido</string>
     <string name="gate_frunk_speed_unknown">Velocidade desconhecida, não é possível abrir o porta-malas dianteiro</string>
     <string name="gate_frunk_moving">O porta-malas dianteiro abre apenas parado (velocidade %1$d km/h)</string>
@@ -2003,4 +2003,8 @@
     <string name="tech_card_fuel">Combustível</string>
     <string name="settings_fuel_price_label">Preço por litro</string>
     <string name="settings_fuel_price_hint">por litro, para viagens a partir desta data</string>
+    <!-- WATTSON fork: adjustable door-unlock limit -->
+    <string name="settings_unlock_limit_title">Destrancamento das portas</string>
+    <string name="settings_unlock_limit_desc">As portas não destrancam enquanto o carro estiver acima da velocidade escolhida. A janela do condutor abre a qualquer velocidade, as outras ficam bloqueadas acima de 120 km/h.</string>
+    <string name="settings_unlock_limit_value">até %1$d km/h</string>
 </resources>

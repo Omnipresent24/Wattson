@@ -37,9 +37,9 @@ class ActionDispatcherSafetyGateTest {
         assertEquals(BlockReason.FrunkSpeedUnknown, ActionDispatcher.safetyBlockReason("前备箱打开", null))
     }
 
-    @Test fun `unlock blocked above 30 and fails closed`() {
-        assertEquals(BlockReason.UnlockSpeed(31), gate("车门解锁", 31))
-        assertNull(gate("车门解锁", 30))
+    @Test fun `unlock blocked above the default limit and fails closed`() {
+        assertEquals(BlockReason.UnlockSpeed(16, 15), gate("车门解锁", 16))
+        assertNull(gate("车门解锁", 15))
         assertEquals(BlockReason.UnlockSpeedUnknown, ActionDispatcher.safetyBlockReason("车门解锁", null))
     }
 
@@ -54,7 +54,7 @@ class ActionDispatcherSafetyGateTest {
     @Test fun `new per-window commands are speed gated`() {
         assertNotNull(gate("后左打开100", 121))   // rear-left open blocked >120
         assertNull(gate("后左打开0", 200))         // close never gated
-        assertNotNull(gate("主驾通风", 121))       // driver vent = open, blocked >120
+        assertNull(gate("主驾通风", 121))          // WATTSON: driver window is never gated
         assertNotNull(gate("后右打开100", 121))   // rear-right open blocked >120
         assertNull(gate("后右打开0", 200))         // close never gated
         assertNotNull(gate("副驾通风", 121))       // passenger vent blocked >120

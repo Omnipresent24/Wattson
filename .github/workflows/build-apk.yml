@@ -1,0 +1,94 @@
+name: Build APK
+
+# WATTSON fork: builds an installable APK on every push to main.
+# A tag like v4.0.1.2 additionally publishes a GitHub release, which the in-app updater picks up.
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-apk-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: gradle/actions/setup-gradle@v5
+
+      # The signing key lives only in repository secrets, never in the repo.
+      # Without it the job still builds, but with a throwaway debug key (fine for a first test,
+      # not for updates: Android refuses an update signed with a different key).
+      - name: Prepare signing key
+        id: signing
+        env:
+          KEYSTORE_B64: ${{ secrets.KEYSTORE_B64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+        run: |
+          if [ -n "$KEYSTORE_B64" ] && [ -n "$KEYSTORE_PASSWORD" ]; then
+            echo "$KEYSTORE_B64" | base64 -d > app/wattson-release.jks
+            {
+              echo "storeFile=wattson-release.jks"
+              echo "storePassword=$KEYSTORE_PASSWORD"
+              echo "keyAlias=wattson"
+              echo "keyPassword=$KEYSTORE_PASSWORD"
+            } > keystore.properties
+            echo "variant=release" >> "$GITHUB_OUTPUT"
+          else
+            echo "::warning::No signing secrets set, building a debug-signed APK"
+            echo "variant=debug" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Unit tests
+        run: ./gradlew :app:testDebugUnitTest --stacktrace
+
+      - name: Build APK
+        run: |
+          if [ "${{ steps.signing.outputs.variant }}" = "release" ]; then
+            ./gradlew :app:assembleRelease --stacktrace
+          else
+            ./gradlew :app:assembleDebug --stacktrace
+          fi
+
+      - name: Collect APK
+        id: apk
+        run: |
+          APK=$(ls app/build/outputs/apk/${{ steps.signing.outputs.variant }}/*.apk | head -n 1)
+          echo "path=$APK" >> "$GITHUB_OUTPUT"
+          echo "Built: $APK"
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: wattson-apk
+          path: ${{ steps.apk.outputs.path }}
+          retention-days: 30
+
+      - name: Publish release
+        if: startsWith(github.ref, 'refs/tags/v') && steps.signing.outputs.variant == 'release'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${GITHUB_REF_NAME}" "${{ steps.apk.outputs.path }}" \
+            --title "Wattson ${GITHUB_REF_NAME}" --notes-file CHANGELOG.wattson.md
+
+      - name: Upload test reports on failure
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: reports
+          path: app/build/reports/
+          retention-days: 14

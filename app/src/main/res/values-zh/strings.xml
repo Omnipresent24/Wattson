@@ -1305,7 +1305,7 @@
     <string name="gate_sunroof_speed">车速 %1$d 公里/小时（&gt;80），禁止打开天窗</string>
     <string name="gate_windows_speed">车速 %1$d 公里/小时（&gt;120），禁止打开车窗</string>
     <string name="gate_unlock_speed_unknown">车速未知，不解锁车门</string>
-    <string name="gate_unlock_speed">车速 %1$d 公里/小时（&gt;30），禁止解锁车门</string>
+    <string name="gate_unlock_speed">车速 %1$d 公里/小时（&gt;%2$d），禁止解锁车门</string>
     <string name="gate_forbidden_command">禁止的命令</string>
     <string name="gate_frunk_speed_unknown">车速未知，无法打开前备箱</string>
     <string name="gate_frunk_moving">前备箱仅在停车时可打开（车速 %1$d 公里/小时）</string>
@@ -2121,4 +2121,8 @@
     <string name="tech_card_fuel">燃油</string>
     <string name="settings_fuel_price_label">每升油价</string>
     <string name="settings_fuel_price_hint">每升价格，适用于此日期起的行程</string>
+    <!-- WATTSON fork: adjustable door-unlock limit -->
+    <string name="settings_unlock_limit_title">车门解锁</string>
+    <string name="settings_unlock_limit_desc">车速高于所选速度时不解锁车门。主驾车窗任何车速都可打开，其他车窗在 120 公里/小时以上被锁定。</string>
+    <string name="settings_unlock_limit_value">%1$d 公里/小时以内</string>
 </resources>

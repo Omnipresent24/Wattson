@@ -1342,7 +1342,7 @@
     <string name="gate_sunroof_speed">Otwieranie szyberdachu zablokowane przy %1$d km/h (&gt;80)</string>
     <string name="gate_windows_speed">Otwieranie okien zablokowane przy %1$d km/h (&gt;120)</string>
     <string name="gate_unlock_speed_unknown">Prędkość nieznana, nie odblokowuję drzwi</string>
-    <string name="gate_unlock_speed">Odblokowanie drzwi zablokowane przy %1$d km/h (&gt;30)</string>
+    <string name="gate_unlock_speed">Odblokowanie drzwi zablokowane przy %1$d km/h (&gt;%2$d)</string>
     <string name="gate_forbidden_command">Zabroniona komenda</string>
     <string name="gate_frunk_speed_unknown">Prędkość nieznana, nie otworzę przedniego bagażnika</string>
     <string name="gate_frunk_moving">Przedni bagażnik otwiera się tylko na postoju (prędkość %1$d km/h)</string>
@@ -2159,4 +2159,8 @@
     <string name="tech_card_fuel">Paliwo</string>
     <string name="settings_fuel_price_label">Cena litra</string>
     <string name="settings_fuel_price_hint">za litr, dla podróży od tej daty</string>
+    <!-- WATTSON fork: adjustable door-unlock limit -->
+    <string name="settings_unlock_limit_title">Odblokowanie drzwi</string>
+    <string name="settings_unlock_limit_desc">Drzwi nie odblokują się, gdy samochód jedzie szybciej niż wybrana prędkość. Okno kierowcy otwiera się przy każdej prędkości, pozostałe okna są blokowane powyżej 120 km/h.</string>
+    <string name="settings_unlock_limit_value">do %1$d km/h</string>
 </resources>

@@ -172,19 +172,30 @@ class ActionDispatcher @Inject @Suppress("LongParameterList") constructor( // Hi
          * is interior and always returns null. Pure function -- unit-testable.
          *
          *  - Sunroof (天窗): blocked when speed > 80 or speed is null.
-         *  - Windows (车窗/主驾/副驾/后左/后右): blocked when speed > 120 or speed is null.
+         *  - Windows (车窗/副驾/后左/后右): blocked when speed > 120 or speed is null.
+         *  - The driver's own window (主驾 only) is never gated (WATTSON fork): the driver
+         *    must always be able to open it. Commands that also move other panes stay gated.
          */
         internal fun speedGateBlockReason(command: String, speed: Int?): BlockReason? {
             if (isSunroofOpenCommand(command)) {
                 val s = speed ?: return BlockReason.SpeedUnknown
                 if (s > 80) return BlockReason.SunroofSpeed(s)
             }
-            if (isWindowOpenCommand(command)) {
+            if (isWindowOpenCommand(command) && !isDriverOnlyWindowCommand(command)) {
                 val s = speed ?: return BlockReason.SpeedUnknown
                 if (s > 120) return BlockReason.WindowsSpeed(s)
             }
             return null
         }
+
+        /**
+         * True if [command] addresses the driver's window alone (主驾…), not a passenger or rear
+         * pane and not a seat. "车窗…" without a seat prefix moves every window, so it is not
+         * driver-only. Pure predicate.
+         */
+        internal fun isDriverOnlyWindowCommand(command: String): Boolean =
+            command.contains("主驾") && !command.contains("座椅") &&
+                listOf("副驾", "后左", "后右").none { command.contains(it) }
 
         /**
          * True if [command] unlocks the doors. "车门解锁" is the single canonical
@@ -194,14 +205,18 @@ class ActionDispatcher @Inject @Suppress("LongParameterList") constructor( // Hi
             command.contains("车门解锁")
 
         /**
-         * Returns a block reason if [command] unlocks the doors while moving
-         * faster than 30 km/h, or when speed is unknown (fail-closed, same
-         * policy as the frunk gate). Locking is never gated. Pure function.
+         * Returns a block reason if [command] unlocks the doors while moving faster than
+         * [maxKmh] (user setting, see [SafetyLimits]), or when speed is unknown (fail-closed,
+         * same policy as the frunk gate). Locking is never gated. Pure function.
          */
-        internal fun unlockGateBlockReason(command: String, speed: Int?): BlockReason? {
+        internal fun unlockGateBlockReason(
+            command: String,
+            speed: Int?,
+            maxKmh: Int = SafetyLimits.unlockMaxKmh,
+        ): BlockReason? {
             if (!isDoorUnlockCommand(command)) return null
             val s = speed ?: return BlockReason.UnlockSpeedUnknown
-            if (s > 30) return BlockReason.UnlockSpeed(s)
+            if (s > maxKmh) return BlockReason.UnlockSpeed(s, maxKmh)
             return null
         }
 
@@ -575,7 +590,7 @@ class ActionDispatcher @Inject @Suppress("LongParameterList") constructor( // Hi
         data class SunroofSpeed(val speed: Int) : BlockReason()
         data class WindowsSpeed(val speed: Int) : BlockReason()
         data object UnlockSpeedUnknown : BlockReason()
-        data class UnlockSpeed(val speed: Int) : BlockReason()
+        data class UnlockSpeed(val speed: Int, val limit: Int = SafetyLimits.DEFAULT_UNLOCK_MAX_KMH) : BlockReason()
         data object Forbidden : BlockReason()
         data object FrunkSpeedUnknown : BlockReason()
         data class FrunkMoving(val speed: Int) : BlockReason()
@@ -589,7 +604,7 @@ class ActionDispatcher @Inject @Suppress("LongParameterList") constructor( // Hi
                 is SunroofSpeed -> lc.getString(R.string.gate_sunroof_speed, speed)
                 is WindowsSpeed -> lc.getString(R.string.gate_windows_speed, speed)
                 is UnlockSpeedUnknown -> lc.getString(R.string.gate_unlock_speed_unknown)
-                is UnlockSpeed -> lc.getString(R.string.gate_unlock_speed, speed)
+                is UnlockSpeed -> lc.getString(R.string.gate_unlock_speed, speed, limit)
                 is Forbidden -> lc.getString(R.string.gate_forbidden_command)
                 is FrunkSpeedUnknown -> lc.getString(R.string.gate_frunk_speed_unknown)
                 is FrunkMoving -> lc.getString(R.string.gate_frunk_moving, speed)

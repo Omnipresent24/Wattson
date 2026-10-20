@@ -1346,7 +1346,7 @@
     <string name="gate_sunroof_speed">Открытие люка заблокировано на скорости %1$d км/ч (&gt;80)</string>
     <string name="gate_windows_speed">Открытие окон заблокировано на скорости %1$d км/ч (&gt;120)</string>
     <string name="gate_unlock_speed_unknown">Скорость неизвестна, двери не отпираю</string>
-    <string name="gate_unlock_speed">Отпирание дверей заблокировано на скорости %1$d км/ч (&gt;30)</string>
+    <string name="gate_unlock_speed">Отпирание дверей заблокировано на скорости %1$d км/ч (&gt;%2$d)</string>
     <string name="gate_forbidden_command">Запрещённая команда</string>
     <string name="gate_frunk_speed_unknown">Скорость неизвестна, передний багажник не открыть</string>
     <string name="gate_frunk_moving">Передний багажник открывается только на стоянке (скорость %1$d км/ч)</string>
@@ -2174,4 +2174,8 @@
     <string name="tech_card_fuel">Топливо</string>
     <string name="settings_fuel_price_label">Цена литра</string>
     <string name="settings_fuel_price_hint">за литр, на поездки с этой даты</string>
+    <!-- WATTSON fork: adjustable door-unlock limit -->
+    <string name="settings_unlock_limit_title">Отпирание дверей</string>
+    <string name="settings_unlock_limit_desc">Двери не отпираются, пока машина едет быстрее выбранной скорости. Окно водителя открывается на любой скорости, остальные окна блокируются выше 120 км/ч.</string>
+    <string name="settings_unlock_limit_value">до %1$d км/ч</string>
 </resources>

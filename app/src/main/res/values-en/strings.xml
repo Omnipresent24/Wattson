@@ -1190,7 +1190,7 @@
     <string name="gate_sunroof_speed">Sunroof opening blocked at %1$d km/h (&gt;80)</string>
     <string name="gate_windows_speed">Window opening blocked at %1$d km/h (&gt;120)</string>
     <string name="gate_unlock_speed_unknown">Speed unknown, doors stay locked</string>
-    <string name="gate_unlock_speed">Door unlocking blocked at %1$d km/h (&gt;30)</string>
+    <string name="gate_unlock_speed">Door unlocking blocked at %1$d km/h (&gt;%2$d)</string>
     <string name="gate_forbidden_command">Forbidden command</string>
     <string name="gate_frunk_speed_unknown">Speed unknown, cannot open the front trunk</string>
     <string name="gate_frunk_moving">The front trunk opens only when parked (speed %1$d km/h)</string>
@@ -2007,4 +2007,8 @@
     <string name="tech_card_fuel">Fuel</string>
     <string name="settings_fuel_price_label">Price per litre</string>
     <string name="settings_fuel_price_hint">per litre, for trips from this date</string>
+    <!-- WATTSON fork: adjustable door-unlock limit -->
+    <string name="settings_unlock_limit_title">Door unlocking</string>
+    <string name="settings_unlock_limit_desc">Doors do not unlock while the car is faster than the chosen speed. The driver window opens at any speed, the other windows are blocked above 120 km/h.</string>
+    <string name="settings_unlock_limit_value">up to %1$d km/h</string>
 </resources>

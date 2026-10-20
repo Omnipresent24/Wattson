@@ -1342,7 +1342,7 @@
     <string name="gate_sunroof_speed">Адкрыццё люка заблакаванае на хуткасці %1$d км/г (&gt;80)</string>
     <string name="gate_windows_speed">Адкрыццё вокнаў заблакаванае на хуткасці %1$d км/г (&gt;120)</string>
     <string name="gate_unlock_speed_unknown">Хуткасць невядомая, дзверы не адмыкаю</string>
-    <string name="gate_unlock_speed">Адмыканне дзвярэй заблакаванае на хуткасці %1$d км/г (&gt;30)</string>
+    <string name="gate_unlock_speed">Адмыканне дзвярэй заблакаванае на хуткасці %1$d км/г (&gt;%2$d)</string>
     <string name="gate_forbidden_command">Забароненая каманда</string>
     <string name="gate_frunk_speed_unknown">Хуткасць невядомая, пярэдні багажнік не адкрыць</string>
     <string name="gate_frunk_moving">Пярэдні багажнік адкрываецца толькі на стаянцы (хуткасць %1$d км/г)</string>
@@ -2159,4 +2159,8 @@
     <string name="tech_card_fuel">Паліва</string>
     <string name="settings_fuel_price_label">Цана літра</string>
     <string name="settings_fuel_price_hint">за літр, на паездкі з гэтай даты</string>
+    <!-- WATTSON fork: adjustable door-unlock limit -->
+    <string name="settings_unlock_limit_title">Адмыканне дзвярэй</string>
+    <string name="settings_unlock_limit_desc">Дзверы не адмыкаюцца, пакуль машына едзе хутчэй за выбраную хуткасць. Акно кіроўцы адчыняецца на любой хуткасці, астатнія вокны блакуюцца вышэй за 120 км/г.</string>
+    <string name="settings_unlock_limit_value">да %1$d км/г</string>
 </resources>

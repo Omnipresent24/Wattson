@@ -2195,6 +2195,9 @@ private fun ServiceSection(
     // Car system: settings that change the head unit itself, not the app.
     SectionHeader(text = stringResource(R.string.settings_car_system_header))
 
+    UnlockSpeedLimitCard()
+    Spacer(modifier = Modifier.height(8.dp))
+
     // Volume-knob press → play/pause. The interception lives in the a11y key filter, so turning
     // the switch on self-enables it via the daemon, exactly like the projection card.
     var knobPlayPause by remember {
@@ -4605,4 +4608,44 @@ private fun cloudOverWifiStatusText(state: CloudOverWifiState): String? = when (
     CloudOverWifiState.ServerRefused -> stringResource(R.string.settings_cloud_wifi_status_refused)
     CloudOverWifiState.Connected -> stringResource(R.string.settings_cloud_wifi_status_connected)
     CloudOverWifiState.ReturnPending -> stringResource(R.string.settings_cloud_wifi_status_return_pending)
+}
+
+/**
+ * WATTSON fork: the door-unlock speed limit, picked from [SafetyLimits.UNLOCK_OPTIONS_KMH].
+ * Stored straight in [SafetyLimits]; the gate in ActionDispatcher reads it on every command.
+ */
+@OptIn(androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
+@Composable
+private fun UnlockSpeedLimitCard() {
+    val context = LocalContext.current
+    var selected by remember { mutableStateOf(com.bydmate.app.data.automation.SafetyLimits.unlockMaxKmh) }
+    Card(
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(containerColor = CardSurfaceElevated),
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        Column(modifier = Modifier.padding(12.dp)) {
+            Text(
+                stringResource(R.string.settings_unlock_limit_title),
+                color = TextPrimary, fontSize = 15.sp, fontWeight = FontWeight.Medium,
+            )
+            Text(
+                stringResource(R.string.settings_unlock_limit_desc),
+                color = TextSecondary, fontSize = 12.sp, lineHeight = 16.sp,
+                modifier = Modifier.padding(top = 2.dp, bottom = 8.dp),
+            )
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                com.bydmate.app.data.automation.SafetyLimits.UNLOCK_OPTIONS_KMH.forEach { kmh ->
+                    UnitChip(
+                        label = stringResource(R.string.settings_unlock_limit_value, kmh),
+                        selected = kmh == selected,
+                        onClick = {
+                            com.bydmate.app.data.automation.SafetyLimits.setUnlockMaxKmh(context, kmh)
+                            selected = kmh
+                        },
+                    )
+                }
+            }
+        }
+    }
 }

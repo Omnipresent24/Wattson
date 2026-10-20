@@ -11,6 +11,7 @@ import com.bydmate.app.ui.widget.WidgetController
 
 /** App UI languages as (code, native name); shared by the Settings picker and the first-run wizard. */
 val APP_LANGUAGES: List<Pair<String, String>> = listOf(
+    "de" to "Deutsch",
     "ru" to "Русский",
     "en" to "English",
     "zh" to "简体中文",

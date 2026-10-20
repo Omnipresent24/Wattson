@@ -30,8 +30,8 @@ android {
         // on DiLink Android 12 (requestLegacyExternalStorage works).
         // targetSdk 30+ would break listFiles() on /storage/emulated/0/energydata/
         targetSdk = 29
-        versionCode = 508
-        versionName = "4.0.1"
+        versionCode = 50801 // WATTSON fork: upstream code * 100 + fork build
+        versionName = "4.0.1.1" // WATTSON fork: upstream version + fork build
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -65,7 +65,7 @@ android {
         val variant = this
         variant.outputs.all {
             val output = this as com.android.build.gradle.internal.api.BaseVariantOutputImpl
-            output.outputFileName = "BYDMate-v${variant.versionName}.apk"
+            output.outputFileName = "Wattson-v${variant.versionName}.apk"
         }
     }
 

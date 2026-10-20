@@ -227,6 +227,20 @@ class ActionDispatcherWindowBlockTest {
         assertEquals(BlockReason.SpeedUnknown, speedGate("车窗全开", null))
     }
 
+    // ── WATTSON fork: the driver's own window is never speed-gated ───────────
+
+    @Test fun `driver window opens at any speed`() {
+        assertNull(speedGate("主驾打开100", 180))
+        assertNull(speedGate("主驾半开", 150))
+        assertNull(speedGate("主驾通风", null))
+    }
+
+    @Test fun `passenger and rear windows stay gated above 120`() {
+        assertEquals(BlockReason.WindowsSpeed(121), speedGate("副驾打开100", 121))
+        assertEquals(BlockReason.WindowsSpeed(130), speedGate("后左打开100", 130))
+        assertEquals(BlockReason.WindowsSpeed(130), speedGate("后右半开", 130))
+    }
+
     // ── speedGateBlockReason: close commands and non-apertures are never gated ─
 
     @Test fun `sunroof close at high speed returns null`() {
