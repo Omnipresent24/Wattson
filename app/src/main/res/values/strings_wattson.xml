@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- WATTSON fork: texts of the fork's own test tools. German only, not translated on purpose. -->
+<resources>
+    <string name="wattson_lab_title" translatable="false">Kamera-Labor</string>
+    <string name="wattson_lab_no_camera" translatable="false">Keine Kamera gefunden. Details:</string>
+    <string name="wattson_lab_set_front" translatable="false">Dieser Kanal = Front</string>
+    <string name="wattson_lab_set_rear" translatable="false">Dieser Kanal = Heck</string>
+    <string name="wattson_lab_record" translatable="false">Testaufnahme (30 s)</string>
+    <string name="wattson_lab_recording" translatable="false">Aufnahme läuft: 15 s Puffer, dann 15 s weiter …</string>
+    <string name="wattson_lab_close" translatable="false">Schließen</string>
+    <string name="wattson_lab_entry_title" translatable="false">Kamera-Labor (Wattson)</string>
+    <string name="wattson_lab_entry_desc" translatable="false">Kamerakanäle durchschalten, Front und Heck festlegen und eine Testaufnahme auf die Speicherkarte machen. Nur im Stand und ohne Blinker benutzen.</string>
+</resources>

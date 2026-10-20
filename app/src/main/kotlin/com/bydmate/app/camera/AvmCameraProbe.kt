@@ -63,6 +63,10 @@ class AvmCameraProbe(
     private val bound = linkedMapOf<Int, Surface>()
     var cameraId: Int = -1; private set
 
+    /** Default preview size the firmware reports for [cameraId]; 0 until [discover] found it. */
+    var previewWidth: Int = 0; private set
+    var previewHeight: Int = 0; private set
+
     /** Loader of the vendor jar the camera classes came from; null when they are on the class path. */
     private var cameraLoader: ClassLoader? = null
 
@@ -142,6 +146,8 @@ class AvmCameraProbe(
             val w = info.getMethod("getDefaultPreviewWidth", Int::class.java).invoke(null, id)
             val h = info.getMethod("getDefaultPreviewHeight", Int::class.java).invoke(null, id)
             note("defaultPreview=${w}x$h")
+            previewWidth = (w as? Number)?.toInt() ?: 0
+            previewHeight = (h as? Number)?.toInt() ?: 0
         }
         return true
     }

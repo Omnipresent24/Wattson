@@ -42,7 +42,7 @@ class BlindSpotPreferences @Inject constructor(
     val bothOnMain: Boolean get() = prefs.getBoolean(KEY_BOTH_ON_MAIN, false)
 
     /** Opt-in (#240): both cameras on the cluster panel, the main screen stays free. */
-    val bothOnCluster: Boolean get() = prefs.getBoolean(KEY_BOTH_ON_CLUSTER, false)
+    val bothOnCluster: Boolean get() = prefs.getBoolean(KEY_BOTH_ON_CLUSTER, DEFAULT_BOTH_ON_CLUSTER)
 
     /** Opt-in (#207): portrait main-screen windows with the picture turned 90°, like a mirror. */
     val pipRotate90: Boolean get() = prefs.getBoolean(KEY_PIP_ROTATE_90, false)
@@ -66,7 +66,10 @@ class BlindSpotPreferences @Inject constructor(
         /** Position is stored in absolute pixels, so "never placed" needs its own value. */
         const val UNSET_PX = -1
 
-        const val DEFAULT_THRESHOLD_KMH = 20
+        /** WATTSON fork: 0 so the camera also shows when pulling out of a parking space. */
+        const val DEFAULT_THRESHOLD_KMH = 0
+        /** WATTSON fork: both cameras in the middle of the cluster by default. */
+        const val DEFAULT_BOTH_ON_CLUSTER = true
         const val DEFAULT_PIP_WIDTH_PCT = 36
 
         /** 0 = show from standstill: the fast loop and the warm camera then stay armed whenever the

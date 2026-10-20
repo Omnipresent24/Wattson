@@ -1486,7 +1486,7 @@ private fun BlindSpotCard() {
         mutableStateOf(prefs.getBoolean(BlindSpotPreferences.KEY_BOTH_ON_MAIN, false))
     }
     var bothOnCluster by remember {
-        mutableStateOf(prefs.getBoolean(BlindSpotPreferences.KEY_BOTH_ON_CLUSTER, false))
+        mutableStateOf(prefs.getBoolean(BlindSpotPreferences.KEY_BOTH_ON_CLUSTER, BlindSpotPreferences.DEFAULT_BOTH_ON_CLUSTER))
     }
     // Same lookup the controller routes by: without a projection panel there is no cluster to offer.
     val hasClusterDisplay = remember { blindSpotClusterDisplay(context) != null }
@@ -1679,6 +1679,19 @@ private fun BlindSpotCard() {
             enabled = enabled,
         )
         SettingHint(text = stringResource(R.string.settings_blindspot_hint))
+        SettingDivider()
+        // WATTSON fork: channel test and test recording on this car.
+        SettingActionRow(
+            title = stringResource(R.string.wattson_lab_entry_title),
+            description = stringResource(R.string.wattson_lab_entry_desc),
+            buttonLabel = stringResource(R.string.settings_tariff_periods_button),
+            onClick = {
+                context.startActivity(
+                    android.content.Intent(context, com.bydmate.app.camera.CameraLabActivity::class.java)
+                        .addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK),
+                )
+            },
+        )
     }
 }
 
