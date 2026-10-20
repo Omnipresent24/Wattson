@@ -50,6 +50,8 @@ class ClipEncoder(
      * Configures the encoder at [w]×[h] (rounded down to a multiple of 16, which every hardware
      * encoder accepts) and returns its input surface, or null when the device refused the size.
      */
+    // Vendor codecs throw anything from IllegalArgumentException to CodecException on a refused size.
+    @Suppress("TooGenericExceptionCaught")
     fun start(w: Int, h: Int, bitRate: Int = DEFAULT_BIT_RATE, fps: Int = DEFAULT_FPS): Surface? {
         stop()
         val ew = w / 16 * 16
@@ -90,6 +92,7 @@ class ClipEncoder(
             val index = try {
                 c.dequeueOutputBuffer(info, DRAIN_TIMEOUT_US)
             } catch (e: IllegalStateException) {
+                Log.i(TAG, "$label: codec stopped: ${e.message}")
                 break
             }
             when {
@@ -138,6 +141,7 @@ class ClipEncoder(
      * Starts writing to [file]: the buffered past first, then every new frame. Returns false
      * when the encoder has not produced a format yet or the file could not be opened.
      */
+    @Suppress("TooGenericExceptionCaught")
     fun startSaving(file: File): Boolean = synchronized(lock) {
         if (muxer != null) return true
         val format = outputFormat ?: return false

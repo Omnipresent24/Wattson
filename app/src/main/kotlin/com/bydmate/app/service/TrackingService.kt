@@ -1400,6 +1400,7 @@ class TrackingService : Service(), LocationListener {
         }
     }
 
+    @Suppress("LongMethod")
     override fun onDestroy() {
         Log.i(TAG, "onDestroy: stopping TrackingService")
         Trace.event(TraceArea.APP, "service-stop")

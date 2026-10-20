@@ -41,6 +41,8 @@ object BackupMirror {
     }
 
     /** Pure file part of [copy], separate for tests. */
+    // Any failure (card pulled, full, read-only) only costs the extra copy.
+    @Suppress("TooGenericExceptionCaught")
     internal fun copyTo(dir: File, file: File): File? = try {
         val copy = file.copyTo(File(dir, file.name), overwrite = true)
         copy.setLastModified(file.lastModified())
