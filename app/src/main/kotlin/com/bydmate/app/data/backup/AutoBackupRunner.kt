@@ -29,9 +29,10 @@ class AutoBackupRunner(
     private val backupManager: BackupManager,
     private val sink: TelegramBackupSink,
     private val settingsRepository: SettingsRepository,
-    private val clock: () -> Long = System::currentTimeMillis,
     /** WATTSON fork: second copy on the SD card ([BackupMirror]); no-op in tests. */
     private val mirror: (File) -> Unit = {},
+    // Last, so the tests' trailing lambda keeps binding to the clock.
+    private val clock: () -> Long = System::currentTimeMillis,
 ) {
     companion object {
         private const val TAG = "AutoBackup"
