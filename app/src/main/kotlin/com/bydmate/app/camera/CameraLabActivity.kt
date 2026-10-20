@@ -28,6 +28,7 @@ import java.util.concurrent.Executors
  *
  * Run it parked, without a turn signal on: the blind-spot pipeline uses the same camera.
  */
+@Suppress("TooManyFunctions")
 class CameraLabActivity : Activity(), TextureView.SurfaceTextureListener {
 
     private val camera = Executors.newSingleThreadExecutor()

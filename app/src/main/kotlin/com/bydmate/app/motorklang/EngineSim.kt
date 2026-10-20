@@ -59,6 +59,8 @@ internal class EngineSim(val profile: EngineProfile, private val ownVmaxKmh: Int
 
     fun startDemo() { demoT = 0.0; throttle = 0.0; v = 0.0; gear = 0 }
 
+    // 1:1 port of the prototype's step(); kept in one piece so it can be compared line by line.
+    @Suppress("CyclomaticComplexMethod", "LongMethod")
     fun step(dt: Double) {
         val lastGear = profile.gears.size - 1
         if (shiftT > 0) shiftT -= dt

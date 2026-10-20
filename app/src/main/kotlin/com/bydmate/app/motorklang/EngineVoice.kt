@@ -115,6 +115,8 @@ internal class EngineVoice(private val sr: Double, profile: EngineProfile, priva
     }
 
     /** Renders [frames] stereo frames into [left]/[right] starting at index 0. */
+    // A 1:1 port of the prototype's per-sample loop; splitting it would cost calls in the hot path.
+    @Suppress("CyclomaticComplexMethod", "LongMethod", "NestedBlockDepth")
     fun render(left: FloatArray, right: FloatArray, frames: Int) {
         for (s in 0 until frames) {
             rpm += (targetRpm - rpm) * 0.0015
@@ -170,8 +172,10 @@ internal class EngineVoice(private val sr: Double, profile: EngineProfile, priva
                 if (knock[i] > 0.001) { knk += knock[i] * rnd.bi(); knock[i] *= 0.93 }
                 v += tv
                 val buf = rb[i]
-                var w = rw[i]
-                val dly = buf[w]; buf[w] = v; w++; if (w >= buf.size) w = 0; rw[i] = w
+                val w = rw[i]
+                val dly = buf[w]
+                buf[w] = v
+                rw[i] = (w + 1) % buf.size
                 rlp[i] += (dly - rlp[i]) * 0.6
                 if (dual && bankOf[i] == 1) bs[1] += rlp[i] else bs[0] += rlp[i]
             }
@@ -180,15 +184,18 @@ internal class EngineVoice(private val sr: Double, profile: EngineProfile, priva
             val dr = 1 + drive * load * 0.6
             for (b in 0 until nb) {
                 val p = pb[b]
-                var w = pw[b]
+                val w = pw[b]
                 val d = p[w]
                 plp[b] += (d - plp[b]) * 0.45
                 var y = bs[b] - fb * plp[b]
-                p[w] = y; w++; if (w >= pl) w = 0; pw[b] = w
+                p[w] = y
+                pw[b] = (w + 1) % pl
                 y = tanh(y * dr * 0.8) / 0.8
                 val m = mb[b]
-                var mi = mw[b]
-                val mm = y + 0.35 * m[mi]; m[mi] = mm * 0.9; mi++; if (mi >= ml) mi = 0; mw[b] = mi
+                val mi = mw[b]
+                val mm = y + 0.35 * m[mi]
+                m[mi] = mm * 0.9
+                mw[b] = (mi + 1) % ml
                 t1[b] += (mm - t1[b]) * fcA
                 t2[b] += (t1[b] - t2[b]) * fcA
                 val h = 0.991 * (hy[b] + t2[b] - hx[b]); hx[b] = t2[b]; hy[b] = h

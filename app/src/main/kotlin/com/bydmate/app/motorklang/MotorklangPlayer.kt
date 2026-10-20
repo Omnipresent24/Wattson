@@ -66,7 +66,10 @@ internal class MotorklangPlayer(
                 .setBufferSizeInBytes(maxOf(minBuf, BLOCK * 8 * 4))
                 .setTransferMode(AudioTrack.MODE_STREAM)
                 .build()
-        } catch (e: Exception) {
+        } catch (e: IllegalArgumentException) {
+            Log.w(TAG, "AudioTrack refused: $e")
+            return
+        } catch (e: UnsupportedOperationException) {
             Log.w(TAG, "AudioTrack refused: $e")
             return
         }
@@ -85,6 +88,7 @@ internal class MotorklangPlayer(
 
     val isRunning get() = running
 
+    @Suppress("NestedBlockDepth", "TooGenericExceptionCaught")
     private fun loop(t: AudioTrack) {
         Process.setThreadPriority(Process.THREAD_PRIORITY_URGENT_AUDIO)
         val l = FloatArray(BLOCK)
