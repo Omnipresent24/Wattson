@@ -36,6 +36,21 @@ jobs:
       - name: detekt
         run: ./gradlew :app:detekt --stacktrace
 
+      # WATTSON fork: run logs are not readable from the fork's tooling, so every detekt finding
+      # becomes an annotation on the check run.
+      - name: detekt findings as annotations
+        if: failure()
+        run: |
+          python3 - <<'PY'
+          import glob, xml.etree.ElementTree as ET, os
+          for f in glob.glob('app/build/reports/detekt/*.xml'):
+              for file in ET.parse(f).getroot().iter('file'):
+                  path = os.path.relpath(file.get('name'), os.getcwd())
+                  for e in file.iter('error'):
+                      msg = (e.get('source','') + ': ' + e.get('message','')).replace('\n',' ')
+                      print(f"::error file={path},line={e.get('line','1')}::{msg}")
+          PY
+
       - name: Upload reports on failure
         if: failure()
         uses: actions/upload-artifact@v7
