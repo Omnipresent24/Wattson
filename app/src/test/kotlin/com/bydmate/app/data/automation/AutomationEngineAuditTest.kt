@@ -139,14 +139,15 @@ class AutomationEngineAuditTest {
         engine = engineWith(realDispatcher)
         engine.liveData = { diParsData(speed = 0) }
         rules = listOf(rule(1, listOf(button(1)), actions = listOf(
-            ActionDef("主驾打开100", "open"), ActionDef("主驾打开0", "close"),
+            // WATTSON fork: the driver window is never speed-gated, so the passenger window is used.
+            ActionDef("副驾打开100", "open"), ActionDef("主驾打开0", "close"),
         )))
         val entry = slot<RuleLogEntity>()
         coEvery { ruleLogDao.insert(capture(entry)) } returns 1L
 
         engine.onButtonPress(1)
 
-        coVerify(exactly = 0) { vehicleApi.dispatch("主驾打开100") }
+        coVerify(exactly = 0) { vehicleApi.dispatch("副驾打开100") }
         coVerify(exactly = 1) { vehicleApi.dispatch("主驾打开0") }
         assertTrue(reasonOf(entry.captured, 0), reasonOf(entry.captured, 0).contains("130"))
     }

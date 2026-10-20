@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tg_report_range_hybrid">Reichweite %1$s elektrisch, %2$s mit Benzin</string>
+    <string name="tg_report_range_hybrid_ev">Reichweite %1$s elektrisch</string>
+    <string name="tg_report_range_hybrid_fuel">Reichweite %1$s mit Benzin</string>
+    <string name="tg_report_fuel_period">Kraftstoff: %1$.1f l im Zeitraum, %2$.1f l/100 über alle km</string>
+    <string name="tg_report_trip_fuel">Kraftstoff: %1$.1f l</string>
+</resources>
